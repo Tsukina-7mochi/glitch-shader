@@ -26,10 +26,6 @@ Shader "GlitchShader"
         _GlitchDisplacement2 ("Glitch Displacement Amount", float) = -0.5
         _GlitchPeriod2 ("Glitch Period", float) = 23
 
-        [HideInInspector] _GlitchShaderVersionMAJOR ("MAJOR", Int) = 1
-        [HideInInspector] _GlitchShaderVersionMINOR ("MINOR", Int) = 0
-        [HideInInspector] _GlitchShaderVersionPATCH ("PATCH", Int) = 0
-
         //// Properties for OpenLit ////
         [Space]
         _AsUnlit                ("As Unlit", Range(0,1)) = 0
