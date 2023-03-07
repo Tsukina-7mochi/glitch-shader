@@ -7,8 +7,6 @@ namespace GlitchShader
 {
     public class GlitchShaderGUI : ShaderGUI
     {
-        public static readonly Version CurrentVersion = new Version(1, 0, 0, "-alpha.2");
-        
         private const string MainTexPropName = "_MainTex";
         private const string ColorPropName = "_Color";
         private const string ShadowThresholdPropName = "_ShadowThreshold";
