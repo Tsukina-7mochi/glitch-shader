@@ -8,6 +8,8 @@
 /Assets/*
 !/Assets/GlitchShader/
 !/Assets/GlitchShader/*
+!/Assets/GlitchShader.meta
+!.gitignore
 
 # This .gitignore file should be placed at the root of your Unity project directory
 #
