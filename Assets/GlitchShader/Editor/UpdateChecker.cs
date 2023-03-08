@@ -39,7 +39,7 @@ namespace GlitchShader
                     Debug.Log($"[Glitch Shader] Update {version.ToString()} is available.");
                 } else if (showLatest)
                 {
-                    Debug.Log("[Glitch Shader] Glitch Shader is up to date.");
+                    Debug.Log($"[Glitch Shader] Glitch Shader is up to date: {CurrentVersion.ToString()}");
                 }
             }
         }
