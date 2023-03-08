@@ -13,7 +13,7 @@ Shader "GlitchShader"
         _ScanLineBrightness ("Scan Line Brightness", Range(0, 1)) = 0.9
         _AlphaCorrection ("Alpha Correction", float) = 0.1
         _ChromaticAberrationIntensity ("Chromatic Aberration Intensity", Range(0, 1)) = 0.02
-        _ChromaticAberrationBaseZScalar ("Chromatic Aberration Base Z Scalar", Range(0, 1)) = 0.99
+        _ChromaticAberrationBaseZShift ("Chromatic Aberration Base Z Shift", float) = 0.001
 
         [Space]
 
@@ -66,7 +66,7 @@ Shader "GlitchShader"
 
             #define BG_TEXTURE_NAME _BackgroundTextureR
             #define CHROMATIC_ABERRATION_SCALER 0
-            #define CHROMATIC_ABERRATION_Z_SCALER _ChromaticAberrationBaseZScalar * _ChromaticAberrationBaseZScalar
+            #define CHROMATIC_ABERRATION_Z_SHIFT 0
             #include "GlitchShader.hlsl"
 
             ENDHLSL
@@ -90,7 +90,7 @@ Shader "GlitchShader"
 
             #define BG_TEXTURE_NAME _BackgroundTextureG
             #define CHROMATIC_ABERRATION_SCALER 0.5
-            #define CHROMATIC_ABERRATION_Z_SCALER _ChromaticAberrationBaseZScalar
+            #define CHROMATIC_ABERRATION_Z_SHIFT _ChromaticAberrationBaseZShift
             #include "GlitchShader.hlsl"
 
             ENDHLSL
@@ -114,7 +114,7 @@ Shader "GlitchShader"
 
             #define BG_TEXTURE_NAME _BackgroundTextureB
             #define CHROMATIC_ABERRATION_SCALER 1
-            #define CHROMATIC_ABERRATION_Z_SCALER 1
+            #define CHROMATIC_ABERRATION_Z_SHIFT _ChromaticAberrationBaseZShift * 2
             #include "GlitchShader.hlsl"
 
             ENDHLSL
