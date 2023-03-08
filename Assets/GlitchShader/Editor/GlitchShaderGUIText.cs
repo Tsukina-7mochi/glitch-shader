@@ -42,7 +42,7 @@ namespace GlitchShader
 
         public const int IdAdvanced = 700;
         public const int IdAdvancedAlphaCorrection = IdAdvanced + 1;
-        public const int IdAdvancedChrAbrBaseZScalar = IdAdvanced + 2;
+        public const int IdAdvancedChrAbrBaseZShift = IdAdvanced + 2;
         public const int IdAdvancedGlitchDisplacementThreshold = IdAdvanced + 3;
 
         public static readonly GlitchShaderGUIText EnText = new GlitchShaderGUIText(
@@ -78,7 +78,7 @@ namespace GlitchShader
             (IdLightingLightDirectionOverride, new GUIContent("Light direction override")),
             (IdAdvanced, new GUIContent("Advanced Settings")),
             (IdAdvancedAlphaCorrection, new GUIContent("Alpha correction", "Corrects transparency based on lightness; the greater the value, the greater the black transparency")),
-            (IdAdvancedChrAbrBaseZScalar, new GUIContent("Chromatic aberration channel Z scalar", "Correction value of clip Z value for each channel of chromatic aberration")),
+            (IdAdvancedChrAbrBaseZShift, new GUIContent("Chromatic aberration channel Z shift", "Correction value of clip Z value for each channel of chromatic aberration")),
             (IdAdvancedGlitchDisplacementThreshold, new GUIContent("Glitch threshold", "Angle of view threshold to enable glitching"))
         );
         
@@ -115,7 +115,7 @@ namespace GlitchShader
             (IdLightingLightDirectionOverride, new GUIContent("光源の向きの上書き")),
             (IdAdvanced, new GUIContent("高度な設定")),
             (IdAdvancedAlphaCorrection, new GUIContent("透明度補正", "透明度を明度に基づいて補正する/値が大きいほど黒色の透明度が大きくなる")),
-            (IdAdvancedChrAbrBaseZScalar, new GUIContent("色収差のZチャンネル拡大率", "色収差の各チャンネルのクリップz座標の補正値")),
+            (IdAdvancedChrAbrBaseZShift, new GUIContent("色収差のZチャンネルシフト量", "色収差の各チャンネルのクリップz座標の補正値")),
             (IdAdvancedGlitchDisplacementThreshold, new GUIContent("グリッチのしきい値", "グリッチを有効化する視線の角度のしきい値"))
         );
 

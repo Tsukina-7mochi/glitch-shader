@@ -16,7 +16,7 @@ float _ShadowBoundaryWidth;
 float _ScanLinePeriod;
 fixed _ScanLineBrightness;
 fixed _ChromaticAberrationIntensity;
-float _ChromaticAberrationBaseZScalar;
+float _ChromaticAberrationBaseZShift;
 fixed _GlitchSharpness;
 fixed _GlitchDisplacementThreshold;
 float _GlitchMaxY;
@@ -98,12 +98,13 @@ v2f Vertex(appdata v)
     float4 scalar = float4(
         1 + _ChromaticAberrationIntensity * CHROMATIC_ABERRATION_SCALER,
         1 + _ChromaticAberrationIntensity * CHROMATIC_ABERRATION_SCALER,
-        CHROMATIC_ABERRATION_Z_SCALER,
+        1,
         1
     );
 
     o.positionWS = mul(unity_ObjectToWorld, float4(v.vertex.xyz, 1.0));
     o.pos = UnityWorldToClipPos(o.positionWS) * scalar;
+    o.pos.z += CHROMATIC_ABERRATION_Z_SHIFT * o.pos.w;
     o.uv = TRANSFORM_TEX(v.uv, _MainTex);
     o.normalWS = UnityObjectToWorldNormal(v.normalOS);
     o.grabPos = ComputeGrabScreenPos(o.pos);
