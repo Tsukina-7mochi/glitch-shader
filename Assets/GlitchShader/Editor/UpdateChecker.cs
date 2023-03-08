@@ -16,7 +16,7 @@ namespace GlitchShader
     [InitializeOnLoad]
     public class UpdateChecker: MonoBehaviour
     {
-        public static readonly Version CurrentVersion = new Version(0, 1, 0, "-alpha.3");
+        public static readonly Version CurrentVersion = new Version(1, 0, 0);
         public static string GitHubURL = "https://api.github.com/repos/Tsukina-7mochi/glitch-shader/releases/latest";
 
         private static IEnumerator _checkUpdate(bool showLatest)
@@ -48,7 +48,7 @@ namespace GlitchShader
         {
             Util.CoroutineRunner.Run(_checkUpdate(showLatest));
         }
-        
+
         [MenuItem("Window/Glitch Shader/Check for update")]
         static void CheckUpdate()
         {
