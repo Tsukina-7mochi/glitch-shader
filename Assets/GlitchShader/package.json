@@ -12,7 +12,7 @@
   "keywords": ["Shader", "Glitch", "Chromatic Aberration"],
   "vpmDependencies" : {
   },
-  "url" : "https://github.com/Tsukina-7mochi/glitch-shader/releases/download/v1.0.1/net.ts7m.glitch-shader.1.0.1.zip",
+  "url" : "https://github.com/Tsukina-7mochi/glitch-shader/releases/download/v1.0.1/net.ts7m.glitch-shader-1.0.1.zip",
   "legacyFolders" : {
     "Assets\\GlitchShader" : "33c2893e6cb44614b911b3d8b166842b"
   }
