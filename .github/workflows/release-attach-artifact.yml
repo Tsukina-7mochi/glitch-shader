@@ -29,8 +29,9 @@ jobs:
         run: |
           URL=$(echo "$RELEASES_URL" | sed -e s:{/id}:/tags/$TAG_NAME:)
           JSON_TEXT=$(curl -sSL $URL)
+          VERSION_NAME=$(echo "$TAG_NAME" | sed -e 's/^v//')
           UPLOAD_URL=$(echo "$JSON_TEXT" | jq ".upload_url" | sed -e 's/\"//g')
-          UPLOAD_URL_ZIP=$(echo "$UPLOAD_URL" | sed -e "s/{?name,label}/?name=net.ts7m.glitch-shader-${TAG_NAME}.zip/")
+          UPLOAD_URL_ZIP=$(echo "$UPLOAD_URL" | sed -e "s/{?name,label}/?name=net.ts7m.glitch-shader-${VERSION_NAME}.zip/")
           UPLOAD_URL_PACKAGE_JSON=$(echo "$UPLOAD_URL" | sed -e "s/{?name,label}/?name=package.json/")
           echo "UPLOAD_URL_ZIP=$UPLOAD_URL_ZIP" >> $GITHUB_ENV
           echo "UPLOAD_URL_PACKAGE_JSON=$UPLOAD_URL_PACKAGE_JSON" >> $GITHUB_ENV
