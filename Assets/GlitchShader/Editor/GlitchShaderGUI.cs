@@ -1,10 +1,13 @@
 ﻿using System;
 using GlitchShader;
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+  using UnityEditor;
+#endif
 
 namespace GlitchShader
 {
+    #if UNITY_EDITOR
     public class GlitchShaderGUI : ShaderGUI
     {
         private const string MainTexPropName = "_MainTex";
@@ -298,4 +301,5 @@ namespace GlitchShader
             }
         }
     }
+    #endif
 }
