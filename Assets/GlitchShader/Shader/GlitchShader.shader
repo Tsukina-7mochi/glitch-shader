@@ -48,75 +48,50 @@ Shader "GlitchShader"
             "VRCFallback"="ToonTransparent"
         }
 
-        GrabPass { "_BackgroundTextureR" }
+        GrabPass { "_netTs7mGlitchShaderGrabTexture" }
 
         Pass
         {
-            ColorMask R
-            HLSLPROGRAM
+            Stencil {
+                Ref 2
+                Comp always
+                Pass replace
+            }
 
+            Blend One Zero
+
+            HLSLPROGRAM
             #pragma skip_variants LIGHTMAP_ON DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRLIGHTMAP_COMBINED
-            #pragma vertex Vertex
-            #pragma fragment Fragment
+            #pragma vertex vert
+            #pragma fragment frag
             #pragma multi_compile_fog
             #pragma shader_feature_local _ _PACK_LIGHTDATAS
             #if defined(SHADER_API_GLES)
                 #undef _PACK_LIGHTDATAS
             #endif
 
-            #define BG_TEXTURE_NAME _BackgroundTextureR
-            #define CHROMATIC_ABERRATION_SCALER 0
-            #define CHROMATIC_ABERRATION_Z_SHIFT 0
-            #include "GlitchShader.hlsl"
-
+            #include "./Pass1.hlsl"
             ENDHLSL
         }
 
-        GrabPass { "_BackgroundTextureG" }
+        GrabPass { }
 
         Pass
         {
-            ColorMask G
+            ZTest Always
+            Stencil {
+                Ref 2
+                Comp Equal
+                Pass Zero
+            }
+
             HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
 
-            #pragma skip_variants LIGHTMAP_ON DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRLIGHTMAP_COMBINED
-            #pragma vertex Vertex
-            #pragma fragment Fragment
-            #pragma multi_compile_fog
-            #pragma shader_feature_local _ _PACK_LIGHTDATAS
-            #if defined(SHADER_API_GLES)
-                #undef _PACK_LIGHTDATAS
-            #endif
-
-            #define BG_TEXTURE_NAME _BackgroundTextureG
-            #define CHROMATIC_ABERRATION_SCALER 0.5
-            #define CHROMATIC_ABERRATION_Z_SHIFT _ChromaticAberrationBaseZShift
-            #include "GlitchShader.hlsl"
-
-            ENDHLSL
-        }
-
-        GrabPass { "_BackgroundTextureB" }
-
-        Pass
-        {
-            ColorMask B
-            HLSLPROGRAM
-
-            #pragma skip_variants LIGHTMAP_ON DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRLIGHTMAP_COMBINED
-            #pragma vertex Vertex
-            #pragma fragment Fragment
-            #pragma multi_compile_fog
-            #pragma shader_feature_local _ _PACK_LIGHTDATAS
-            #if defined(SHADER_API_GLES)
-                #undef _PACK_LIGHTDATAS
-            #endif
-
-            #define BG_TEXTURE_NAME _BackgroundTextureB
-            #define CHROMATIC_ABERRATION_SCALER 1
-            #define CHROMATIC_ABERRATION_Z_SHIFT _ChromaticAberrationBaseZShift * 2
-            #include "GlitchShader.hlsl"
-
+            #define _BgGrabTextureName _netTs7mGlitchShaderGrabTexture
+            #define _PrevPassGrabTextureName _GrabTexture
+            #include "./Pass2.hlsl"
             ENDHLSL
         }
     }

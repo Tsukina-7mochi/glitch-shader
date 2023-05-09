@@ -1,12 +1,11 @@
 #include "UnityCG.cginc"
 #include "Lighting.cginc"
 #include "AutoLight.cginc"
-#include "OpenLitCore.hlsl"
-#include "Util.cginc"
+#include "./OpenLitCore.hlsl"
+#include "./Util.hlsl"
 
 sampler2D _MainTex;
 float4 _MainTex_ST;
-sampler2D BG_TEXTURE_NAME;
 fixed4 _Color;
 float _ShadowThreshold;
 float _AlphaCorrection;
@@ -16,7 +15,6 @@ float _ShadowBoundaryWidth;
 float _ScanLinePeriod;
 fixed _ScanLineBrightness;
 fixed _ChromaticAberrationIntensity;
-float _ChromaticAberrationBaseZShift;
 fixed _GlitchSharpness;
 fixed _GlitchDisplacementThreshold;
 float _GlitchMaxY;
@@ -51,29 +49,29 @@ struct v2f
     float3 positionWS : TEXCOORD0;
     float2 uv : TEXCOORD1;
     float3 normalWS : TEXCOORD2;
-    float4 grabPos : TEXCOORD3;
+
     // [OpenLit] Add light datas
     #if defined(_PACK_LIGHTDATAS)
-        nointerpolation uint3 lightDatas : TEXCOORD4;
-        UNITY_FOG_COORDS(5)
-        UNITY_LIGHTING_COORDS(6, 7)
+        nointerpolation uint3 lightDatas : TEXCOORD3;
+        UNITY_FOG_COORDS(4)
+        UNITY_LIGHTING_COORDS(5, 6)
         #if !defined(LIGHTMAP_ON) && UNITY_SHOULD_SAMPLE_SH
-            float3 vertexLight  : TEXCOORD8;
+            float3 vertexLight  : TEXCOORD7;
         #endif
     #else
-        nointerpolation float3 lightDirection : TEXCOORD4;
-        nointerpolation float3 directLight : TEXCOORD5;
-        nointerpolation float3 indirectLight : TEXCOORD6;
-        UNITY_FOG_COORDS(7)
-        UNITY_LIGHTING_COORDS(8, 9)
+        nointerpolation float3 lightDirection : TEXCOORD3;
+        nointerpolation float3 directLight : TEXCOORD4;
+        nointerpolation float3 indirectLight : TEXCOORD5;
+        UNITY_FOG_COORDS(6)
+        UNITY_LIGHTING_COORDS(7, 8)
         #if !defined(LIGHTMAP_ON) && UNITY_SHOULD_SAMPLE_SH
-            float3 vertexLight  : TEXCOORD10;
+            float3 vertexLight  : TEXCOORD9;
         #endif
     #endif
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
-v2f Vertex(appdata v)
+v2f vert(appdata v)
 {
     v2f o;
     UNITY_INITIALIZE_OUTPUT(v2f,o);
@@ -84,30 +82,30 @@ v2f Vertex(appdata v)
     float3 viewDir = ObjSpaceViewDir(v.vertex);
     float2 projectedViewDir = viewDir.xz;
     if(length(projectedViewDir) > _GlitchDisplacementThreshold) {
-        float GlitchY1 = (1 - frac(_Time.y / _GlitchPeriod1)) * (_GlitchMaxY - _GlitchMinY) + _GlitchMinY;
-        float GlitchY2 = (1 - frac(_Time.y / _GlitchPeriod2)) * (_GlitchMaxY - _GlitchMinY) + _GlitchMinY;
-
         float2 normPrjViewDir = normalize(projectedViewDir);
-        float2 displacement1 = float2(-normPrjViewDir.y, normPrjViewDir.x) * _GlitchDisplacement1;
-        float2 displacement2 = float2(-normPrjViewDir.y, normPrjViewDir.x) * _GlitchDisplacement2;
-        v.vertex.xz += (1 - saturate(abs(v.vertex.y - GlitchY1) * _GlitchSharpness)) * displacement1;
-        v.vertex.xz += (1 - saturate(abs(v.vertex.y - GlitchY2) * _GlitchSharpness)) * displacement2;
+        float2 displacement1 = computeGlitch(
+            v.vertex.y,
+            _GlitchPeriod1,
+            _GlitchMinY,
+            _GlitchMaxY,
+            normPrjViewDir,
+            _GlitchSharpness
+        ) * _GlitchDisplacement1;
+        float2 displacement2 = computeGlitch(
+            v.vertex.y,
+            _GlitchPeriod2,
+            _GlitchMinY,
+            _GlitchMaxY,
+            normPrjViewDir,
+            _GlitchSharpness
+        ) * _GlitchDisplacement2;
+        v.vertex.xz += displacement1 + displacement2;
     }
 
-    // scaling for chromatic aberration
-    float4 scalar = float4(
-        1 + _ChromaticAberrationIntensity * CHROMATIC_ABERRATION_SCALER,
-        1 + _ChromaticAberrationIntensity * CHROMATIC_ABERRATION_SCALER,
-        1,
-        1
-    );
-
     o.positionWS = mul(unity_ObjectToWorld, float4(v.vertex.xyz, 1.0));
-    o.pos = UnityWorldToClipPos(o.positionWS) * scalar;
-    o.pos.z += CHROMATIC_ABERRATION_Z_SHIFT * o.pos.w;
+    o.pos = UnityWorldToClipPos(o.positionWS);
     o.uv = TRANSFORM_TEX(v.uv, _MainTex);
     o.normalWS = UnityObjectToWorldNormal(v.normalOS);
-    o.grabPos = ComputeGrabScreenPos(o.pos);
     UNITY_TRANSFER_FOG(o,o.pos);
     UNITY_TRANSFER_LIGHTING(o,v.uv1);
 
@@ -132,7 +130,7 @@ v2f Vertex(appdata v)
     return o;
 }
 
-half4 Fragment(v2f i) : SV_Target
+half4 frag(v2f i) : SV_Target
 {
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
     UNITY_LIGHT_ATTENUATION(attenuation, i, i.positionWS);
@@ -163,12 +161,8 @@ half4 Fragment(v2f i) : SV_Target
     #endif
     UNITY_APPLY_FOG(i.fogCoord, col);
 
-    col.rgb = maxElement(col.rgb);
+    col.rgb = maxElement(col.rgb);  // extract brightness
     col.rgb *= (sin(i.pos.y / _ScanLinePeriod) < 0) ? _ScanLineBrightness : 1;
-
-    half4 bgcol = tex2Dproj(BG_TEXTURE_NAME, i.grabPos);
-    col.rgb = lerp(bgcol.rgb, col.rgb, saturate(pow(col.a, 1 - _AlphaCorrection * col.r)));
-    col.a = 1;
 
     return col;
 }
