@@ -6,20 +6,20 @@ namespace GlitchShader
     public class GlitchShaderGUIText
     {
         public const int IdDefaultBtn = 0;
-        
+
         public const int IdGeneral = 100;
         public const int IdGeneralColor = IdGeneral + 1;
-        
+
         public const int IdShadow = 200;
         public const int IdShadowReceiveShadow = IdShadow + 1;
         public const int IdShadowColor = IdShadow + 2;
         public const int IdShadowBoundaryWidth = IdShadow + 3;
         public const int IdShadowThreshold = IdShadow + 4;
-        
+
         public const int IdScanline = 300;
         public const int IdScanlineThickness = IdScanline + 1;
         public const int IdScanlineBrightness = IdScanline + 2;
-        
+
         public const int IdChrAbr = 400;
         public const int IdChrAbrIntensity = IdChrAbr + 1;
 
@@ -30,7 +30,7 @@ namespace GlitchShader
         public const int IdGlitch2 = IdGlitch + 4;
         public const int IdGlitchIntensity = IdGlitch + 5;
         public const int IdGlitchPeriod = IdGlitch + 6;
-        
+
         public const int IdLighting = 600;
         public const int IdLightingAsUnlit = IdLighting + 1;
         public const int IdLightingVertexLightStrength = IdLighting + 2;
@@ -42,8 +42,7 @@ namespace GlitchShader
 
         public const int IdAdvanced = 700;
         public const int IdAdvancedAlphaCorrection = IdAdvanced + 1;
-        public const int IdAdvancedChrAbrBaseZShift = IdAdvanced + 2;
-        public const int IdAdvancedGlitchDisplacementThreshold = IdAdvanced + 3;
+        public const int IdAdvancedGlitchDisplacementThreshold = IdAdvanced + 2;
 
         public static readonly GlitchShaderGUIText EnText = new GlitchShaderGUIText(
             "en",
@@ -78,10 +77,9 @@ namespace GlitchShader
             (IdLightingLightDirectionOverride, new GUIContent("Light direction override")),
             (IdAdvanced, new GUIContent("Advanced Settings")),
             (IdAdvancedAlphaCorrection, new GUIContent("Alpha correction", "Corrects transparency based on lightness; the greater the value, the greater the black transparency")),
-            (IdAdvancedChrAbrBaseZShift, new GUIContent("Chromatic aberration channel Z shift", "Correction value of clip Z value for each channel of chromatic aberration")),
             (IdAdvancedGlitchDisplacementThreshold, new GUIContent("Glitch threshold", "Angle of view threshold to enable glitching"))
         );
-        
+
         public static readonly GlitchShaderGUIText JpText = new GlitchShaderGUIText(
             "jp",
             "日本語",
@@ -115,7 +113,6 @@ namespace GlitchShader
             (IdLightingLightDirectionOverride, new GUIContent("光源の向きの上書き")),
             (IdAdvanced, new GUIContent("高度な設定")),
             (IdAdvancedAlphaCorrection, new GUIContent("透明度補正", "透明度を明度に基づいて補正する/値が大きいほど黒色の透明度が大きくなる")),
-            (IdAdvancedChrAbrBaseZShift, new GUIContent("色収差のZチャンネルシフト量", "色収差の各チャンネルのクリップz座標の補正値")),
             (IdAdvancedGlitchDisplacementThreshold, new GUIContent("グリッチのしきい値", "グリッチを有効化する視線の角度のしきい値"))
         );
 

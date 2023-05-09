@@ -17,7 +17,6 @@ namespace GlitchShader
         private const string ScanLineBrightnessPropName = "_ScanLineBrightness";
         private const string AlphaCorrectionPropName = "_AlphaCorrection";
         private const string ChrAbrIntensityPropName = "_ChromaticAberrationIntensity";
-        private const string ChrAbrBaseZShiftPropName = "_ChromaticAberrationBaseZShift";
         private const string GlitchSharpnessPropName = "_GlitchSharpness";
         private const string GlitchDisplacementThresholdPropName = "_GlitchDisplacementThreshold";
         private const string GlitchMaxYPropName = "_GlitchMaxY";
@@ -68,7 +67,6 @@ namespace GlitchShader
             var scanLineBrightnessProp = FindProperty(ScanLineBrightnessPropName, properties);
             var alphaCorrectionProp = FindProperty(AlphaCorrectionPropName, properties);
             var chrAbrIntensityProp = FindProperty(ChrAbrIntensityPropName, properties);
-            var chrAbrBaseZShiftProp = FindProperty(ChrAbrBaseZShiftPropName, properties);
             var glitchSharpnessProp = FindProperty(GlitchSharpnessPropName, properties);
             var glitchDisplacementThresholdProp = FindProperty(GlitchDisplacementThresholdPropName, properties);
             var glitchMaxYProp = FindProperty(GlitchMaxYPropName, properties);
@@ -291,11 +289,6 @@ namespace GlitchShader
                 MyMaterialEditorGUILayout.FloatProperty(
                     _text.GetText(GlitchShaderGUIText.IdAdvancedAlphaCorrection),
                     alphaCorrectionProp
-                );
-
-                MyMaterialEditorGUILayout.FloatProperty(
-                    _text.GetText(GlitchShaderGUIText.IdAdvancedChrAbrBaseZShift),
-                    chrAbrBaseZShiftProp
                 );
 
                 MyMaterialEditorGUILayout.RangeProperty(
