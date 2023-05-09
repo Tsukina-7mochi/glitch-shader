@@ -62,5 +62,5 @@ jobs:
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -H "Content-Type: application/octet-stream" \
-            $UPLOAD_URL_ZIP \
+            $UPLOAD_URL_PACKAGE_JSON \
             --data-binary "@Assets/GlitchShader/package.json"
