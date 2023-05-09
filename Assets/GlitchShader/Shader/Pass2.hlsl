@@ -93,7 +93,7 @@ fixed4 frag (v2f i) : SV_Target
     fixed colG = tex2Dproj(_PrevPassGrabTextureName, i.grabPosG).g;
     fixed colB = tex2Dproj(_PrevPassGrabTextureName, i.grabPosB).b;
 
-    fixed4 texCol = tex2D(_MainTex, i.uv) * _Color;
+    fixed4 texCol = tex2Dproj(_PrevPassGrabTextureName, i.grabPosR) * _Color;
     fixed brightness = maxElement(texCol.rgb);
     fixed4 col = lerp(
         bgCol,
