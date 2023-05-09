@@ -50,7 +50,7 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -H "Content-Type: application/octet-stream" \
             $UPLOAD_URL_ZIP \
-            --data-binary "@Assets/GlitchShade/$TEMP_ASSET_NAME"
+            --data-binary "@Assets/GlitchShader/$TEMP_ASSET_NAME"
 
       - name: Upload package json
         env:
@@ -63,4 +63,4 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -H "Content-Type: application/octet-stream" \
             $UPLOAD_URL_ZIP \
-            --data-binary "@Assets/GlitchShade/package.json"
+            --data-binary "@Assets/GlitchShader/package.json"
