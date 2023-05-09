@@ -35,14 +35,6 @@ jobs:
           echo "UPLOAD_URL_ZIP=$UPLOAD_URL_ZIP" >> $GITHUB_ENV
           echo "UPLOAD_URL_PACKAGE_JSON=$UPLOAD_URL_PACKAGE_JSON" >> $GITHUB_ENV
 
-      - name: Setup Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
-
-      - name: Build
-        run: deno task build
-
       - name: Create zip
         run: cd ./Assets/GlitchShader; zip $TEMP_ASSET_NAME -r .
 
