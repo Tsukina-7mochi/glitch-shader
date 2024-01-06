@@ -1,0 +1,32 @@
+name: check version
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: ['opened', 'synchronize']
+    branches: [main]
+
+jobs:
+  lint-and-check-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get version
+        run: |
+          VERSION=$(cat "./Assets/GlitchShader/package.json" | jq ".version")
+          echo "VERSION=$VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Check version duplication
+        run: |
+          NOT_FOUND=$(git tag | grep "$VERSION" | echo "$?")
+          echo "NOT_FOUND=$NOT_FOUND"
+          echo "NOT_FOUND=$NOT_FOUND" >> $GITHUB_ENV
+
+      - name: Make workflow fail
+        if: ${{ env.NOT_FOUND == 0 }}
+        run: |
+          echo "::error ::Duplicated version: $VERSION"
+          exit 1
