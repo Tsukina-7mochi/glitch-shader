@@ -32,7 +32,6 @@ namespace GlitchShader
         private const string VertexLightStrengthPropName = "_VertexLightStrength";
         private const string LightMinLimitPropName = "_LightMinLimit";
         private const string LightMaxLimitPropName = "_LightMaxLimit";
-        private const string BeforeExposurePropName = "_BeforeExposureLimit";
         private const string MonochromeLightingPropName = "_MonochromeLighting";
         private const string LightDirectionOverridePropName = "_LightDirectionOverride";
 
@@ -82,7 +81,6 @@ namespace GlitchShader
             var vertexLightStrengthProp = FindProperty(VertexLightStrengthPropName, properties);
             var lightMinLimitProp = FindProperty(LightMinLimitPropName, properties);
             var lightMaxLimitProp = FindProperty(LightMaxLimitPropName, properties);
-            var beforeExposureLimitProp = FindProperty(BeforeExposurePropName, properties);
             var monochromeLightingProp = FindProperty(MonochromeLightingPropName, properties);
             var lightDirectionOverrideProp = FindProperty(LightDirectionOverridePropName, properties);
 
@@ -263,11 +261,6 @@ namespace GlitchShader
                 MyMaterialEditorGUILayout.RangeProperty(
                     _text.GetText(GlitchShaderGUIText.IdLightingLightMaxLimit),
                     lightMaxLimitProp
-                );
-
-                MyMaterialEditorGUILayout.FloatProperty(
-                    _text.GetText(GlitchShaderGUIText.IdLightingBeforeExposure),
-                    beforeExposureLimitProp
                 );
 
                 MyMaterialEditorGUILayout.RangeProperty(

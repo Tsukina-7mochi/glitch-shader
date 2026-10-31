@@ -36,7 +36,6 @@ namespace GlitchShader
         public const int IdLightingVertexLightStrength = IdLighting + 2;
         public const int IdLightingLightMinLimit = IdLighting + 3;
         public const int IdLightingLightMaxLimit = IdLighting + 4;
-        public const int IdLightingBeforeExposure = IdLighting + 5;
         public const int IdLightingMonochromeLighting = IdLighting + 6;
         public const int IdLightingLightDirectionOverride = IdLighting + 7;
 
@@ -72,7 +71,6 @@ namespace GlitchShader
             (IdLightingVertexLightStrength, new GUIContent("Vertex light strength")),
             (IdLightingLightMinLimit, new GUIContent("Light min limit")),
             (IdLightingLightMaxLimit, new GUIContent("Light max limit")),
-            (IdLightingBeforeExposure, new GUIContent("Before exposure limit")),
             (IdLightingMonochromeLighting, new GUIContent("Monochrome lighting")),
             (IdLightingLightDirectionOverride, new GUIContent("Light direction override")),
             (IdAdvanced, new GUIContent("Advanced Settings")),
@@ -108,7 +106,6 @@ namespace GlitchShader
             (IdLightingVertexLightStrength, new GUIContent("頂点ライトの強さ")),
             (IdLightingLightMinLimit, new GUIContent("明るさの下限")),
             (IdLightingLightMaxLimit, new GUIContent("明るさの上限")),
-            (IdLightingBeforeExposure, new GUIContent("Before exposure limit")),
             (IdLightingMonochromeLighting, new GUIContent("光源のモノクロ化")),
             (IdLightingLightDirectionOverride, new GUIContent("光源の向きの上書き")),
             (IdAdvanced, new GUIContent("高度な設定")),

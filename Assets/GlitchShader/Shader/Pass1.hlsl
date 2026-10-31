@@ -29,7 +29,6 @@ float _AsUnlit;
 float _VertexLightStrength;
 float _LightMinLimit;
 float _LightMaxLimit;
-float _BeforeExposureLimit;
 float _MonochromeLighting;
 // float _AlphaBoostFA;
 float4 _LightDirectionOverride;

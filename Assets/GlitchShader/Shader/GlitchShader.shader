@@ -13,7 +13,6 @@ Shader "GlitchShader"
         _ScanLineBrightness ("Scan Line Brightness", Range(0, 1)) = 0.9
         _AlphaCorrection ("Alpha Correction", float) = 0.1
         _ChromaticAberrationIntensity ("Chromatic Aberration Intensity", Range(0, 1)) = 0.02
-        _ChromaticAberrationBaseZShift ("Chromatic Aberration Base Z Shift", float) = 0.001
 
         [Space]
 
@@ -32,7 +31,6 @@ Shader "GlitchShader"
         _VertexLightStrength    ("Vertex Light Strength", Range(0,1)) = 0
         _LightMinLimit          ("Light Min Limit", Range(0,1)) = 0.05
         _LightMaxLimit          ("Light Max Limit", Range(0,10)) = 1
-        _BeforeExposureLimit    ("Before Exposure Limit", Float) = 10000
         _MonochromeLighting     ("Monochrome lighting", Range(0,1)) = 0
         // _AlphaBoostFA           ("Boost Transparency in ForwardAdd", Range(1,100)) = 10
         _LightDirectionOverride ("Light Direction Override", Vector) = (0.001,0.002,0.001,0)
