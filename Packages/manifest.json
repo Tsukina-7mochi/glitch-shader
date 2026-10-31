@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.unity.ai.assistant": "2.21.0-pre.2",
     "com.unity.collab-proxy": "2.13.6",
     "com.unity.feature.development": "1.0.2",
     "com.unity.ide.rider": "3.1.0",
