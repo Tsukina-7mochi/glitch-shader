@@ -100,6 +100,9 @@ v2f interpolateV2f(v2f v[3], float3 weights)
 [maxvertexcount(GLITCH_SLICE_MAX_VERTEX_COUNT)]
 void geom(triangle v2f input[3], inout TriangleStream<v2f> stream)
 {
+    // the glitch bands are projected with the matrices of this eye
+    UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input[0]);
+
     GlitchSlice slice = sliceTriangleByGlitch(input[0].pos, input[1].pos, input[2].pos);
     for (uint i = 0; i < slice.vertexCount; i++)
     {

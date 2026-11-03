@@ -11,8 +11,9 @@
 #error "_PrevPassGrabTextureName undefined"
 #endif
 
-sampler2D _BgGrabTextureName;
-sampler2D _PrevPassGrabTextureName;
+// grab textures are texture arrays (one slice per eye) in single pass instanced stereo
+UNITY_DECLARE_SCREENSPACE_TEXTURE(_BgGrabTextureName);
+UNITY_DECLARE_SCREENSPACE_TEXTURE(_PrevPassGrabTextureName);
 
 struct appdata
 {
@@ -28,6 +29,7 @@ struct v2f
     float4 grabPosR : TEXCOORD1;
     float4 grabPosG : TEXCOORD2;
     float4 grabPosB : TEXCOORD3;
+    UNITY_VERTEX_OUTPUT_STEREO
 };
 
 // Vertex stage
@@ -46,6 +48,7 @@ v2f vert(appdata v)
 
 // Geometry stage
 
+// The stereo eye index is taken from v[0].
 // Grab positions are computed in geom after the displacement.
 v2f interpolateV2f(v2f v[3], float3 weights)
 {
@@ -59,6 +62,9 @@ v2f interpolateV2f(v2f v[3], float3 weights)
 [maxvertexcount(GLITCH_SLICE_MAX_VERTEX_COUNT)]
 void geom(triangle v2f input[3], inout TriangleStream<v2f> stream)
 {
+    // the glitch bands are projected with the matrices of this eye
+    UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input[0]);
+
     GlitchSlice slice = sliceTriangleByGlitch(input[0].vertex, input[1].vertex, input[2].vertex);
     for (uint i = 0; i < slice.vertexCount; i++)
     {
@@ -82,12 +88,18 @@ void geom(triangle v2f input[3], inout TriangleStream<v2f> stream)
 
 fixed4 frag (v2f i) : SV_Target
 {
-    fixed4 bgCol = tex2Dproj(_BgGrabTextureName, i.grabPosR);
-    fixed colR = tex2Dproj(_PrevPassGrabTextureName, i.grabPosR).r;
-    fixed colG = tex2Dproj(_PrevPassGrabTextureName, i.grabPosG).g;
-    fixed colB = tex2Dproj(_PrevPassGrabTextureName, i.grabPosB).b;
+    UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 
-    fixed4 texCol = tex2Dproj(_PrevPassGrabTextureName, i.grabPosR) * _Color;
+    float2 grabUvR = i.grabPosR.xy / i.grabPosR.w;
+    float2 grabUvG = i.grabPosG.xy / i.grabPosG.w;
+    float2 grabUvB = i.grabPosB.xy / i.grabPosB.w;
+
+    fixed4 bgCol = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_BgGrabTextureName, grabUvR);
+    fixed colR = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_PrevPassGrabTextureName, grabUvR).r;
+    fixed colG = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_PrevPassGrabTextureName, grabUvG).g;
+    fixed colB = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_PrevPassGrabTextureName, grabUvB).b;
+
+    fixed4 texCol = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_PrevPassGrabTextureName, grabUvR) * _Color;
     fixed brightness = maxElement(texCol.rgb);
     fixed4 col = lerp(
         bgCol,
