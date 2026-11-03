@@ -13,3 +13,8 @@ A shader for Unity that create glitches and other hologram-like effects by just 
 ## Unity version
 
 6000.6.7f1
+
+## Notes
+
+This branch is re-created copying old source to migrate to new Unity version.
+To see old branch visit [v2.0.5](https://github.com/Tsukina-7mochi/glitch-shader/tree/v2.0.5)
