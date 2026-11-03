@@ -1,18 +1,18 @@
 {
   "name" : "net.ts7m.glitch-shader",
   "displayName" : "Glitch Shader",
-  "version" : "2.0.5",
+  "version" : "3.0.0-alpha.0",
   "author": {
     "name": "Mooncake Sugar",
     "email": "Tsukina7mochi@gmail.com"
   },
-  "unity" : "2019.4",
+  "unity" : "2022.3",
   "description" : "A shader for Unity that create glitches and other hologram-like effects by just attaching to objects (does not require post-effects.)",
   "license": "MIT",
   "keywords": ["Shader", "Glitch", "Chromatic Aberration"],
   "vpmDependencies" : {
   },
-  "url" : "https://github.com/Tsukina-7mochi/glitch-shader/releases/download/v2.0.5/net.ts7m.glitch-shader-2.0.5.zip",
+  "url" : "https://github.com/Tsukina-7mochi/glitch-shader/releases/download/v3.0.0-alpha.0/net.ts7m.glitch-shader-3.0.0-alpha.0.zip",
   "legacyFolders" : {
     "Assets\\GlitchShader" : "33c2893e6cb44614b911b3d8b166842b"
   }
