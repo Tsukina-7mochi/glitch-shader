@@ -73,8 +73,8 @@ Material:
     - _GlitchDisplacement1: 0.5
     - _GlitchDisplacement2: -0.5
     - _GlitchDisplacementThreshold: 0.5
-    - _GlitchMaxY: 10
-    - _GlitchMinY: -10
+    - _GlitchMaxY: 2
+    - _GlitchMinY: -2
     - _GlitchPeriod1: 31
     - _GlitchPeriod2: 23
     - _GlitchSharpness: 100
