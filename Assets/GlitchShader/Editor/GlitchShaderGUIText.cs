@@ -41,7 +41,6 @@ namespace GlitchShader
 
         public const int IdAdvanced = 700;
         public const int IdAdvancedAlphaCorrection = IdAdvanced + 1;
-        public const int IdAdvancedGlitchDisplacementThreshold = IdAdvanced + 2;
 
         public static readonly GlitchShaderGUIText EnText = new GlitchShaderGUIText(
             "en",
@@ -74,8 +73,7 @@ namespace GlitchShader
             (IdLightingMonochromeLighting, new GUIContent("Monochrome lighting")),
             (IdLightingLightDirectionOverride, new GUIContent("Light direction override")),
             (IdAdvanced, new GUIContent("Advanced Settings")),
-            (IdAdvancedAlphaCorrection, new GUIContent("Alpha correction", "Corrects transparency based on lightness; the greater the value, the greater the black transparency")),
-            (IdAdvancedGlitchDisplacementThreshold, new GUIContent("Glitch threshold", "Angle of view threshold to enable glitching"))
+            (IdAdvancedAlphaCorrection, new GUIContent("Alpha correction", "Corrects transparency based on lightness; the greater the value, the greater the black transparency"))
         );
 
         public static readonly GlitchShaderGUIText JpText = new GlitchShaderGUIText(
@@ -109,8 +107,7 @@ namespace GlitchShader
             (IdLightingMonochromeLighting, new GUIContent("光源のモノクロ化")),
             (IdLightingLightDirectionOverride, new GUIContent("光源の向きの上書き")),
             (IdAdvanced, new GUIContent("高度な設定")),
-            (IdAdvancedAlphaCorrection, new GUIContent("透明度補正", "透明度を明度に基づいて補正する/値が大きいほど黒色の透明度が大きくなる")),
-            (IdAdvancedGlitchDisplacementThreshold, new GUIContent("グリッチのしきい値", "グリッチを有効化する視線の角度のしきい値"))
+            (IdAdvancedAlphaCorrection, new GUIContent("透明度補正", "透明度を明度に基づいて補正する/値が大きいほど黒色の透明度が大きくなる"))
         );
 
         public readonly string Language;

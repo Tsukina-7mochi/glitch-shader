@@ -17,7 +17,6 @@ Shader "GlitchShader"
         [Space]
 
         _GlitchSharpness ("Glitch Sharpness", float) = 100
-        _GlitchDisplacementThreshold ("Glitch Displacement Threshold", Range(0, 1)) = 0.5
         _GlitchMaxY ("Glitch Maximum Y Coordinate", float) = 10
         _GlitchMinY ("Glitch Minimun Y Coordinate", float) = -10
         _GlitchDisplacement1 ("Glitch Displacement Amount", float) = 0.5
@@ -61,7 +60,9 @@ Shader "GlitchShader"
             HLSLPROGRAM
             #pragma skip_variants LIGHTMAP_ON DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRLIGHTMAP_COMBINED
             #pragma vertex vert
+            #pragma geometry geom
             #pragma fragment frag
+            #pragma target 4.0
             #pragma multi_compile_fog
             #pragma shader_feature_local _ _PACK_LIGHTDATAS
             #if defined(SHADER_API_GLES)
@@ -85,7 +86,9 @@ Shader "GlitchShader"
 
             HLSLPROGRAM
             #pragma vertex vert
+            #pragma geometry geom
             #pragma fragment frag
+            #pragma target 4.0
 
             #define _BgGrabTextureName _netTs7mGlitchShaderGrabTexture
             #define _PrevPassGrabTextureName _GrabTexture

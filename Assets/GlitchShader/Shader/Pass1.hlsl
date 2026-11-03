@@ -2,36 +2,9 @@
 #include "Lighting.cginc"
 #include "AutoLight.cginc"
 #include "./OpenLitCore.hlsl"
+#include "./Properties.hlsl"
 #include "./Util.hlsl"
-
-sampler2D _MainTex;
-float4 _MainTex_ST;
-fixed4 _Color;
-float _ShadowThreshold;
-float _AlphaCorrection;
-uint _ReceiveShadow;
-fixed4 _ShadowColor;
-float _ShadowBoundaryWidth;
-float _ScanLinePeriod;
-fixed _ScanLineBrightness;
-fixed _ChromaticAberrationIntensity;
-fixed _GlitchSharpness;
-fixed _GlitchDisplacementThreshold;
-float _GlitchMaxY;
-float _GlitchMinY;
-float _GlitchDisplacement1;
-float _GlitchPeriod1;
-float _GlitchDisplacement2;
-float _GlitchPeriod2;
-
-// [OpenLit] Properties for lighting
-float _AsUnlit;
-float _VertexLightStrength;
-float _LightMinLimit;
-float _LightMaxLimit;
-float _MonochromeLighting;
-// float _AlphaBoostFA;
-float4 _LightDirectionOverride;
+#include "./Glitch.hlsl"
 
 struct appdata
 {
@@ -70,6 +43,8 @@ struct v2f
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
+// Vertex stage
+
 v2f vert(appdata v)
 {
     v2f o;
@@ -77,35 +52,10 @@ v2f vert(appdata v)
     UNITY_SETUP_INSTANCE_ID(v);
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-    // apply Glitch
-    float3 viewDir = ObjSpaceViewDir(v.vertex);
-    float2 projectedViewDir = viewDir.xz;
-    if(length(projectedViewDir) > _GlitchDisplacementThreshold) {
-        float2 normPrjViewDir = normalize(projectedViewDir);
-        float2 displacement1 = computeGlitch(
-            v.vertex.y,
-            _GlitchPeriod1,
-            _GlitchMinY,
-            _GlitchMaxY,
-            normPrjViewDir,
-            _GlitchSharpness
-        ) * _GlitchDisplacement1;
-        float2 displacement2 = computeGlitch(
-            v.vertex.y,
-            _GlitchPeriod2,
-            _GlitchMinY,
-            _GlitchMaxY,
-            normPrjViewDir,
-            _GlitchSharpness
-        ) * _GlitchDisplacement2;
-        v.vertex.xz += displacement1 + displacement2;
-    }
-
     o.positionWS = mul(unity_ObjectToWorld, float4(v.vertex.xyz, 1.0));
     o.pos = UnityWorldToClipPos(o.positionWS);
     o.uv = TRANSFORM_TEX(v.uv, _MainTex);
     o.normalWS = UnityObjectToWorldNormal(v.normalOS);
-    UNITY_TRANSFER_FOG(o,o.pos);
     UNITY_TRANSFER_LIGHTING(o,v.uv1);
 
     // [OpenLit] Calculate and copy vertex lighting
@@ -128,6 +78,42 @@ v2f vert(appdata v)
 
     return o;
 }
+
+// Geometry stage
+
+// Light data (no interpolation), lighting coords (not written in this pass) and
+// the stereo eye index are taken from v[0].
+v2f interpolateV2f(v2f v[3], float3 weights)
+{
+    v2f o = v[0];
+    o.pos        = INTERPOLATE_TRIANGLE(v, weights, pos);
+    o.positionWS = INTERPOLATE_TRIANGLE(v, weights, positionWS);
+    o.uv         = INTERPOLATE_TRIANGLE(v, weights, uv);
+    o.normalWS   = INTERPOLATE_TRIANGLE(v, weights, normalWS);
+    #if !defined(LIGHTMAP_ON) && UNITY_SHOULD_SAMPLE_SH
+        o.vertexLight = INTERPOLATE_TRIANGLE(v, weights, vertexLight);
+    #endif
+    return o;
+}
+
+// Slices the triangle along the glitch bands, then displaces every resulting vertex.
+[maxvertexcount(GLITCH_SLICE_MAX_VERTEX_COUNT)]
+void geom(triangle v2f input[3], inout TriangleStream<v2f> stream)
+{
+    GlitchSlice slice = sliceTriangleByGlitch(input[0].pos, input[1].pos, input[2].pos);
+    for (uint i = 0; i < slice.vertexCount; i++)
+    {
+        v2f o = interpolateV2f(input, getSliceWeights(slice, i));
+        o.pos = applyGlitch(o.pos);
+
+        // fog depends only on the clip-space position
+        UNITY_TRANSFER_FOG(o,o.pos);
+
+        stream.Append(o);
+    }
+}
+
+// Fragment stage
 
 half4 frag(v2f i) : SV_Target
 {

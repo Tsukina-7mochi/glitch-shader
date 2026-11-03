@@ -1,5 +1,7 @@
 #include "UnityCG.cginc"
-#include "Util.hlsl"
+#include "./Properties.hlsl"
+#include "./Util.hlsl"
+#include "./Glitch.hlsl"
 
 #ifndef _BgGrabTextureName
 #error "_BgGrabTextureName undefined"
@@ -9,19 +11,6 @@
 #error "_PrevPassGrabTextureName undefined"
 #endif
 
-sampler2D _MainTex;
-float4 _MainTex_ST;
-fixed4 _Color;
-float _AlphaCorrection;
-fixed _ChromaticAberrationIntensity;
-fixed _GlitchSharpness;
-fixed _GlitchDisplacementThreshold;
-float _GlitchMaxY;
-float _GlitchMinY;
-float _GlitchDisplacement1;
-float _GlitchPeriod1;
-float _GlitchDisplacement2;
-float _GlitchPeriod2;
 sampler2D _BgGrabTextureName;
 sampler2D _PrevPassGrabTextureName;
 
@@ -29,6 +18,7 @@ struct appdata
 {
     float4 vertex : POSITION;
     float2 uv : TEXCOORD0;
+    UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
 struct v2f
@@ -40,51 +30,55 @@ struct v2f
     float4 grabPosB : TEXCOORD3;
 };
 
-v2f vert (appdata v)
+// Vertex stage
+
+v2f vert(appdata v)
 {
     v2f o;
     UNITY_INITIALIZE_OUTPUT(v2f,o);
     UNITY_SETUP_INSTANCE_ID(v);
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-    // apply glitch
-    float3 viewDir = ObjSpaceViewDir(v.vertex);
-    float2 projectedViewDir = viewDir.xz;
-    if(length(projectedViewDir) > _GlitchDisplacementThreshold) {
-        float2 normPrjViewDir = normalize(projectedViewDir);
-        float2 displacement1 = computeGlitch(
-            v.vertex.y,
-            _GlitchPeriod1,
-            _GlitchMinY,
-            _GlitchMaxY,
-            normPrjViewDir,
-            _GlitchSharpness
-        ) * _GlitchDisplacement1;
-        float2 displacement2 = computeGlitch(
-            v.vertex.y,
-            _GlitchPeriod2,
-            _GlitchMinY,
-            _GlitchMaxY,
-            normPrjViewDir,
-            _GlitchSharpness
-        ) * _GlitchDisplacement2;
-        v.vertex.xz += displacement1 + displacement2;
-    }
-
-    // compute grabPos for chromatic aberration
-    float caMultiplier = 1 - _ChromaticAberrationIntensity;
-
     o.vertex = UnityObjectToClipPos(v.vertex);
     o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-
-    float4 clipPos = o.vertex;
-    o.grabPosR = ComputeGrabScreenPos(clipPos);
-    clipPos.xy *= caMultiplier;
-    o.grabPosG = ComputeGrabScreenPos(clipPos);
-    clipPos.xy *= caMultiplier;
-    o.grabPosB = ComputeGrabScreenPos(clipPos);
     return o;
 }
+
+// Geometry stage
+
+// Grab positions are computed in geom after the displacement.
+v2f interpolateV2f(v2f v[3], float3 weights)
+{
+    v2f o = v[0];
+    o.vertex = INTERPOLATE_TRIANGLE(v, weights, vertex);
+    o.uv     = INTERPOLATE_TRIANGLE(v, weights, uv);
+    return o;
+}
+
+// Slices the triangle along the glitch bands, then displaces every resulting vertex.
+[maxvertexcount(GLITCH_SLICE_MAX_VERTEX_COUNT)]
+void geom(triangle v2f input[3], inout TriangleStream<v2f> stream)
+{
+    GlitchSlice slice = sliceTriangleByGlitch(input[0].vertex, input[1].vertex, input[2].vertex);
+    for (uint i = 0; i < slice.vertexCount; i++)
+    {
+        v2f o = interpolateV2f(input, getSliceWeights(slice, i));
+        o.vertex = applyGlitch(o.vertex);
+
+        // grab positions for chromatic aberration: G and B are sampled closer to the screen center than R
+        float caMultiplier = 1 - _ChromaticAberrationIntensity;
+        float4 clipPos = o.vertex;
+        o.grabPosR = ComputeGrabScreenPos(clipPos);
+        clipPos.xy *= caMultiplier;
+        o.grabPosG = ComputeGrabScreenPos(clipPos);
+        clipPos.xy *= caMultiplier;
+        o.grabPosB = ComputeGrabScreenPos(clipPos);
+
+        stream.Append(o);
+    }
+}
+
+// Fragment stage
 
 fixed4 frag (v2f i) : SV_Target
 {

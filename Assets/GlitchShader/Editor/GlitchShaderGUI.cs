@@ -21,7 +21,6 @@ namespace GlitchShader
         private const string AlphaCorrectionPropName = "_AlphaCorrection";
         private const string ChrAbrIntensityPropName = "_ChromaticAberrationIntensity";
         private const string GlitchSharpnessPropName = "_GlitchSharpness";
-        private const string GlitchDisplacementThresholdPropName = "_GlitchDisplacementThreshold";
         private const string GlitchMaxYPropName = "_GlitchMaxY";
         private const string GlitchMinYPropName = "_GlitchMinY";
         private const string GlitchDisplacement1PropName = "_GlitchDisplacement1";
@@ -70,7 +69,6 @@ namespace GlitchShader
             var alphaCorrectionProp = FindProperty(AlphaCorrectionPropName, properties);
             var chrAbrIntensityProp = FindProperty(ChrAbrIntensityPropName, properties);
             var glitchSharpnessProp = FindProperty(GlitchSharpnessPropName, properties);
-            var glitchDisplacementThresholdProp = FindProperty(GlitchDisplacementThresholdPropName, properties);
             var glitchMaxYProp = FindProperty(GlitchMaxYPropName, properties);
             var glitchMinYProp = FindProperty(GlitchMinYPropName, properties);
             var glitchDisplacement1Prop = FindProperty(GlitchDisplacement1PropName, properties);
@@ -285,11 +283,6 @@ namespace GlitchShader
                 MyMaterialEditorGUILayout.FloatProperty(
                     _text.GetText(GlitchShaderGUIText.IdAdvancedAlphaCorrection),
                     alphaCorrectionProp
-                );
-
-                MyMaterialEditorGUILayout.RangeProperty(
-                    _text.GetText(GlitchShaderGUIText.IdAdvancedGlitchDisplacementThreshold),
-                    glitchDisplacementThresholdProp
                 );
             }
         }
