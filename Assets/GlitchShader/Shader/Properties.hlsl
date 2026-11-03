@@ -4,6 +4,7 @@
 sampler2D _MainTex;
 float4 _MainTex_ST;
 fixed4 _Color;
+fixed _Monochrome;
 float _ShadowThreshold;
 uint _ReceiveShadow;
 fixed4 _ShadowColor;

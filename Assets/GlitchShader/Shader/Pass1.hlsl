@@ -149,7 +149,7 @@ half4 frag(v2f i) : SV_Target
     #endif
     UNITY_APPLY_FOG(i.fogCoord, col);
 
-    col.rgb = maxElement(col.rgb);  // extract brightness
+    col.rgb = lerp(col.rgb, maxElement(col.rgb), _Monochrome);  // blend toward brightness
     col.rgb *= (sin(i.pos.y / _ScanLinePeriod) < 0) ? _ScanLineBrightness : 1;
 
     return col;

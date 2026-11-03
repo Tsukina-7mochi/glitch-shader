@@ -9,6 +9,7 @@ namespace GlitchShader
 
         public const int IdGeneral = 100;
         public const int IdGeneralColor = IdGeneral + 1;
+        public const int IdGeneralMonochrome = IdGeneral + 2;
 
         public const int IdShadow = 200;
         public const int IdShadowReceiveShadow = IdShadow + 1;
@@ -48,6 +49,7 @@ namespace GlitchShader
             (IdDefaultBtn, new GUIContent("Reset all configurations to default")),
             (IdGeneral, new GUIContent("General Settings")),
             (IdGeneralColor, new GUIContent("Color", "Main texture and base color")),
+            (IdGeneralMonochrome, new GUIContent("Monochrome", "Degree of converting colors to grayscale brightness")),
             (IdShadow, new GUIContent("Shadow Settings")),
             (IdShadowReceiveShadow, new GUIContent("Receive shadow", "Whether shadows are received from external light sources")),
             (IdShadowColor, new GUIContent("Color")),
@@ -82,6 +84,7 @@ namespace GlitchShader
             (IdDefaultBtn, new GUIContent("すべての設定をデフォルトに戻す")),
             (IdGeneral, new GUIContent("一般設定")),
             (IdGeneralColor, new GUIContent("色", "テクスチャとベースカラー")),
+            (IdGeneralMonochrome, new GUIContent("モノクロ化", "色を明るさのグレースケールに変換する度合い")),
             (IdShadow, new GUIContent("影設定")),
             (IdShadowReceiveShadow, new GUIContent("影を受け取る", "外部の光源から影を受け取るかどうか")),
             (IdShadowColor, new GUIContent("色")),

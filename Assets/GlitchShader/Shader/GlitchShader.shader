@@ -4,6 +4,7 @@ Shader "GlitchShader"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Color ("Color", Color) = (1, 1, 1, 1)
+        _Monochrome ("Monochrome", Range(0, 1)) = 1
         _ShadowThreshold ("Shadow Threshold", Range(-1,1)) = -0.3
         [Toggle(_)] _ReceiveShadow ("Receive Shadow", Int) = 0
         [Toggle(_PACK_LIGHTDATAS)] _PackLightDatas ("[Debug] Pack Light Datas", Int) = 0

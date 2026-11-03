@@ -12,6 +12,7 @@ namespace GlitchShader
     {
         private const string MainTexPropName = "_MainTex";
         private const string ColorPropName = "_Color";
+        private const string MonochromePropName = "_Monochrome";
         private const string ShadowThresholdPropName = "_ShadowThreshold";
         private const string ReceiveShadowPropName = "_ReceiveShadow";
         private const string ShadowColorPropName = "_ShadowColor";
@@ -60,6 +61,7 @@ namespace GlitchShader
         {
             var mainTexProp = FindProperty(MainTexPropName, properties);
             var colorProp = FindProperty(ColorPropName, properties);
+            var monochromeProp = FindProperty(MonochromePropName, properties);
             var shadowThresholdProp = FindProperty(ShadowThresholdPropName, properties);
             var receiveShadowProp = FindProperty(ReceiveShadowPropName, properties);
             var shadowColorProp = FindProperty(ShadowColorPropName, properties);
@@ -101,6 +103,11 @@ namespace GlitchShader
                 _text.GetText(GlitchShaderGUIText.IdGeneralColor),
                 mainTexProp,
                 colorProp
+            );
+
+            MyMaterialEditorGUILayout.RangeProperty(
+                _text.GetText(GlitchShaderGUIText.IdGeneralMonochrome),
+                monochromeProp
             );
 
             materialEditor.RenderQueueField();
